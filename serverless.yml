@@ -1,0 +1,24 @@
+frameworkVersion: "3"
+service: tariff-calculation
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: provided.al2023
+  region: ${env:AWS_REGION}
+  endpointType: ${env:ENDPOINT_TYPE, 'EDGE'}
+  stage: ${env:STAGE}
+
+package:
+  individually: true
+  patterns:
+    - "!./**"
+    - "./bin/**"
+
+functions:
+# todo specify in different yml files
+#  readModelLambda:
+#  writeModelLambda:
+
+resources:
+# todo specify dynamodb, iam role, policies...
