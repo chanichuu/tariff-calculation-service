@@ -13,4 +13,14 @@ func RouteReadmodelCalls(router *gin.Engine) {
 	subRouter.POST(constants.TariffsPath)
 	subRouter.PUT(constants.SingleTariffPath)
 	subRouter.DELETE(constants.SingleTariffPath)
+
+	// Contract routes
+	subRouter.POST(constants.ContractsPath)
+	subRouter.PUT(constants.SingleContractPath)
+	subRouter.DELETE(constants.SingleContractPath)
+
+	// Provider routes
+	subRouter.POST(constants.ProvidersPath)
+	subRouter.PUT(constants.SingleProviderPath)
+	subRouter.DELETE(constants.SingleProviderPath)
 }

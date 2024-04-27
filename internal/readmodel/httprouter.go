@@ -17,4 +17,12 @@ func RouteReadmodelCalls(router *gin.Engine) {
 	// Tariff routes
 	subRouter.GET(constants.TariffsPath, HandleGetTariffs)
 	subRouter.GET(constants.SingleTariffPath, HandleGetTariff)
+
+	// Contract routes
+	subRouter.GET(constants.ContractsPath, HandleGetContracts)
+	subRouter.GET(constants.SingleContractPath, HandleGetContract)
+
+	// Provider routes
+	subRouter.GET(constants.ProvidersPath, HandleGetProviders)
+	subRouter.GET(constants.SingleProviderPath, HandleGetProvider)
 }

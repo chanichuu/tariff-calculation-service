@@ -1,13 +1,44 @@
 package readmodel
 
-import "tariff-calculation-service/internal/models"
+import (
+	"net/http"
+	"os"
 
-func HandleGetTariffs(partitionId string) *[]models.Tariff {
-	tariffs := []models.Tariff{}
-	return &tariffs
+	"github.com/gin-gonic/gin"
+)
+
+func HandleGetHealth(context *gin.Context) {
+	context.IndentedJSON(http.StatusOK, "Service is healthy.")
 }
 
-func HandleGetTariff(partitionId, tariffId string) *models.Tariff {
-	tariff := models.Tariff{}
-	return &tariff
+func HandleGetVersion(context *gin.Context) {
+	context.IndentedJSON(http.StatusOK, os.Getenv("VERSION"))
+}
+
+func HandleGetRestVersion(context *gin.Context) {
+	context.IndentedJSON(http.StatusOK, os.Getenv("REST_API_VERSION"))
+}
+
+func HandleGetTariffs(context *gin.Context) {
+	context.IndentedJSON(http.StatusOK, nil)
+}
+
+func HandleGetTariff(context *gin.Context) {
+	context.IndentedJSON(http.StatusOK, nil)
+}
+
+func HandleGetContracts(context *gin.Context) {
+	context.IndentedJSON(http.StatusOK, nil)
+}
+
+func HandleGetContract(context *gin.Context) {
+	context.IndentedJSON(http.StatusOK, nil)
+}
+
+func HandleGetProviders(context *gin.Context) {
+	context.IndentedJSON(http.StatusOK, nil)
+}
+
+func HandleGetProvider(context *gin.Context) {
+	context.IndentedJSON(http.StatusOK, nil)
 }
