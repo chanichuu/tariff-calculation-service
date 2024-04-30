@@ -1,0 +1,31 @@
+readModelLambda:
+  package:
+    artifact: ./bin/readmodel/readmodel.zip
+  handler: bootstrap
+  environment:
+    DYNAMODB_TABLE_NAME: ${env:DYNAMODB_TABLE_NAME}
+  events:
+    - http:
+        method: get
+        path: api/v1/partitions/{pid}/contracts/{id}
+    # todo enable for all endpoints once auth lambda is in place
+    #        authorizer:
+    #          arn: ${env:LAMBDA_AUTH_ARN}
+    #          resultTtlInSeconds: 0 # disable auth caching
+    #          identitySource: method.request.header.Authorization, context.httpMethod, context.path
+    #          type: request
+    - http:
+        method: get
+        path: api/v1/partitions/{pid}/contracts
+    - http:
+        method: get
+        path: api/v1/partitions/{pid}/providers/{id}
+    - http:
+        method: get
+        path: api/v1/partitions/{pid}/providers
+    - http:
+        method: get
+        path: api/v1/partitions/{pid}/tariffs/{id}
+    - http:
+        method: get
+        path: api/v1/partitions/{pid}/tariffs

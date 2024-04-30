@@ -1,0 +1,40 @@
+writeModelLambda:
+  package:
+    artifact: ./bin/writemodel/writemodel.zip
+  handler: bootstrap
+  environment:
+    DYNAMODB_TABLE_NAME: ${env:DYNAMODB_TABLE_NAME}
+  events:
+    - http:
+        method: post
+        path: api/v1/partitions/{pid}/contracts
+    # todo enable for all endpoints once auth lambda is in place
+    #        authorizer:
+    #          arn: ${env:LAMBDA_AUTH_ARN}
+    #          resultTtlInSeconds: 0 # disable auth caching
+    #          identitySource: method.request.header.Authorization, context.httpMethod, context.path
+    #          type: request
+    - http:
+        method: put
+        path: api/v1/partitions/{pid}/contracts/{id}
+    - http:
+        method: delete
+        path: api/v1/partitions/{pid}/contracts/{id}
+    - http:
+        method: post
+        path: api/v1/partitions/{pid}/providers
+    - http:
+        method: put
+        path: api/v1/partitions/{pid}/providers/{id}
+    - http:
+        method: delete
+        path: api/v1/partitions/{pid}/providers/{id}
+    - http:
+        method: post
+        path: api/v1/partitions/{pid}/tariffs
+    - http:
+        method: put
+        path: api/v1/partitions/{pid}/tariffs/{id}
+    - http:
+        method: delete
+        path: api/v1/partitions/{pid}/tariffs/{id}

@@ -16,9 +16,46 @@ package:
     - "./bin/**"
 
 functions:
-# todo specify in different yml files
-#  readModelLambda:
-#  writeModelLambda:
+  readModelLambda: ${file(cmd/readmodel/rm_serverless.yml):readModelLambda}}
+  writeModelLambda: ${file(cmd/writemodel/wm_serverless.yml):writeModelLambda}}
 
 resources:
-# todo specify dynamodb, iam role, policies...
+  Resources:
+    TariffsDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: ${env:DYNAMODB_DELETION_POLICY}
+      Properties:
+        TableName: ${env:DYNAMODB_TABLE_NAME}
+        AttributeDefinitions:
+          - AttributeName: Partition_Id
+            AttributeType: S
+          - AttributeName: Sort_Key
+            AttributeType: S
+        KeySchema:
+          - AttributeName: Partition_Id
+            KeyType: HASH
+          - AttributeName: Sort_Key
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+    DefaultRole:
+      Type: AWS::IAM::Role
+      Properties:
+        Path: /serverless/
+        RoleName: ${env:DEPLOYMENT_ENV}-TariffServerlessRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      # todo define needed policies
+#      Polices:
+#        - PolicyName: XYZ
+#          PolicyDocument:
+#            Version: '2012-10-17'
+#            Statement:
+#              - Effect: Allow
+#                Action: sts:XYZ
+#            Resource: "arn:XYZ"
