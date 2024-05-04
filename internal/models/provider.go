@@ -1,15 +1,15 @@
 package models
 
 type Provider struct {
-	Id      string
-	Name    string
-	Email   string
-	Address Address
+	Id      string  `json:"id"`
+	Name    string  `json:"name"`
+	Email   string  `json:"email"`
+	Address Address `json:"address"`
 }
 
 type Address struct {
-	Street     string
-	PostalCode uint16
-	City       string
-	Country    string
+	Street     string `json:"street"`
+	PostalCode uint16 `json:"postalCode"`
+	City       string `json:"city"`
+	Country    string `json:"country"`
 }

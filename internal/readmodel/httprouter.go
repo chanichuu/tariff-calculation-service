@@ -1,6 +1,7 @@
 package readmodel
 
 import (
+	"tariff-calculation-service/internal/readmodel/httphandler"
 	"tariff-calculation-service/pkg/constants"
 
 	"github.com/gin-gonic/gin"
@@ -8,21 +9,25 @@ import (
 
 func RouteReadmodelCalls(router *gin.Engine) {
 	subRouter := router.Group(constants.BasePath)
+	serviceHandler := httphandler.NewHttpHandler()
+	tariffHandler := httphandler.NewTariffHandler()
+	contractHandler := httphandler.NewContractHandler()
+	providerHandler := httphandler.NewProviderHandler()
 
 	// Base routes
-	subRouter.GET(constants.HealthPath, HandleGetHealth)
-	subRouter.GET(constants.VersionPath, HandleGetVersion)
-	subRouter.GET(constants.RestVersionPath, HandleGetRestVersion)
+	subRouter.GET(constants.HealthPath, serviceHandler.HandleGetHealth)
+	subRouter.GET(constants.VersionPath, serviceHandler.HandleGetVersion)
+	subRouter.GET(constants.RestVersionPath, serviceHandler.HandleGetRestVersion)
 
 	// Tariff routes
-	subRouter.GET(constants.TariffsPath, HandleGetTariffs)
-	subRouter.GET(constants.SingleTariffPath, HandleGetTariff)
+	subRouter.GET(constants.TariffsPath, tariffHandler.HandleGetTariffs)
+	subRouter.GET(constants.SingleTariffPath, tariffHandler.HandleGetTariff)
 
 	// Contract routes
-	subRouter.GET(constants.ContractsPath, HandleGetContracts)
-	subRouter.GET(constants.SingleContractPath, HandleGetContract)
+	subRouter.GET(constants.ContractsPath, contractHandler.HandleGetContracts)
+	subRouter.GET(constants.SingleContractPath, contractHandler.HandleGetContract)
 
 	// Provider routes
-	subRouter.GET(constants.ProvidersPath, HandleGetProviders)
-	subRouter.GET(constants.SingleProviderPath, HandleGetProvider)
+	subRouter.GET(constants.ProvidersPath, providerHandler.HandleGetProviders)
+	subRouter.GET(constants.SingleProviderPath, providerHandler.HandleGetProvider)
 }
