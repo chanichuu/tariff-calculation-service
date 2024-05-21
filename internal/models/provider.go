@@ -9,7 +9,7 @@ type Provider struct {
 
 type Address struct {
 	Street     string `json:"street"`
-	PostalCode uint16 `json:"postalCode"`
+	PostalCode string `json:"postalCode"`
 	City       string `json:"city"`
 	Country    string `json:"country"`
 }

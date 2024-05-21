@@ -1,3 +1,5 @@
+//go:generate mockgen -source=dbclient.go -destination=testing/dbclient_mocks.go -package=testing DynamoDBManager
+
 package database
 
 import (
@@ -14,9 +16,17 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
-// todo PutItem, Query, etc... calls to DynamoDB that can be reused be repositories
+type DynamoDBManager interface {
+	GetItem(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error)
+	PutItem(ctx context.Context, params *dynamodb.PutItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.PutItemOutput, error)
+	UpdateItem(ctx context.Context, params *dynamodb.UpdateItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.UpdateItemOutput, error)
+	DeleteItem(ctx context.Context, params *dynamodb.DeleteItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.DeleteItemOutput, error)
+	Query(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error)
+	BatchWriteItem(ctx context.Context, params *dynamodb.BatchWriteItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.BatchWriteItemOutput, error)
+}
+
 type DBClient struct {
-	DynamoDBClient *dynamodb.Client
+	DynamoDBClient DynamoDBManager
 	TableName      string
 	PartitionKey   string
 	SortKey        string
@@ -76,7 +86,7 @@ func PutEntity[T any](dbClient DBClient, entity T) error {
 	return err
 }
 
-func UpdateEntity[T any](dbClient DBClient, key map[string]types.AttributeValue, expr expression.Expression) error {
+func UpdateEntity(dbClient DBClient, key map[string]types.AttributeValue, expr expression.Expression) error {
 	_, err := dbClient.DynamoDBClient.UpdateItem(context.TODO(), &dynamodb.UpdateItemInput{
 		TableName:                 &dbClient.TableName,
 		Key:                       key,
@@ -105,19 +115,8 @@ func DeleteEntity(dbClient DBClient, key map[string]types.AttributeValue) error 
 	return err
 }
 
-func BatchWriteEntities(dbClient DBClient, writeRequests []types.WriteRequest) error {
-	input := &dynamodb.BatchWriteItemInput{
-		RequestItems: map[string][]types.WriteRequest{
-			dbClient.TableName: writeRequests,
-		},
-	}
-
-	_, err := dbClient.DynamoDBClient.BatchWriteItem(context.TODO(), input)
-	return err
-}
-
-func QueryEntities[T any](dbClient DBClient, paritionKey, sortKey string) ([]DBEntity[T], error) {
-	keyEx := expression.Key(dbClient.PartitionKey).Equal(expression.Value(paritionKey)).And(expression.KeyBeginsWith(expression.Key(dbClient.SortKey), sortKey))
+func QueryEntities[T any](dbClient DBClient, partitionKey, sortKey string) ([]DBEntity[T], error) {
+	keyEx := expression.Key(dbClient.PartitionKey).Equal(expression.Value(partitionKey)).And(expression.KeyBeginsWith(expression.Key(dbClient.SortKey), sortKey))
 	expr, err := expression.NewBuilder().WithKeyCondition(keyEx).Build()
 	if err != nil {
 		return nil, err

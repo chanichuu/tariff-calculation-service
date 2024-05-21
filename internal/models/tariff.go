@@ -5,11 +5,12 @@ import (
 )
 
 type Tariff struct {
-	Id        string `json:"id"`
-	Name      string `json:"name"`
-	Currency  string `json:"currency"`
-	ValidFrom string `json:"validFrom"`
-	ValidTo   string `json:"validTo"`
+	Id         string           `json:"id"`
+	Name       string           `json:"name"`
+	Currency   string           `json:"currency"`
+	ValidFrom  string           `json:"validFrom"`
+	ValidTo    string           `json:"validTo"`
+	TariffType enums.TariffType `json:"tariffType"`
 }
 
 type FixedTariff struct {

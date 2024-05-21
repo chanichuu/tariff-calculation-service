@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"tariff-calculation-service/internal/database"
+	"tariff-calculation-service/pkg/constants"
 
 	"github.com/gin-gonic/gin"
 )
@@ -35,7 +36,7 @@ func (handler ContractHandler) HandleGetContract(context *gin.Context) {
 	contractId := context.Param("cid")
 	contract, err := handler.ContractRepo.GetContract(partitionId, contractId)
 	if err != nil {
-		if strings.Contains(err.Error(), "ResourceNotFound") {
+		if strings.Contains(err.Error(), constants.ResourceNotFound) {
 			context.IndentedJSON(http.StatusNotFound, nil)
 			return
 		}

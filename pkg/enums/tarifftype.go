@@ -7,6 +7,7 @@ const (
 	Water
 	Gas
 	Biogas
+	Oil
 )
 
 func (tariffType TariffType) String() string {
@@ -19,6 +20,8 @@ func (tariffType TariffType) String() string {
 		return "Gas"
 	case Biogas:
 		return "Biogas"
+	case Oil:
+		return "Oil"
 	}
 	return "unknown"
 }
