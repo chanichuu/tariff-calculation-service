@@ -1,3 +1,5 @@
+//go:generate mockgen -source=contracthandler.go -destination=testing/contracthandler_mocks.go -package=testing ContractGetter
+
 package httphandler
 
 import (
@@ -5,13 +7,19 @@ import (
 	"strings"
 
 	"tariff-calculation-service/internal/database"
+	"tariff-calculation-service/internal/models"
 	"tariff-calculation-service/pkg/constants"
 
 	"github.com/gin-gonic/gin"
 )
 
+type ContractGetter interface {
+	GetContracts(partitionId string) (*[]models.Contract, error)
+	GetContract(partitionId, contractId string) (*models.Contract, error)
+}
+
 type ContractHandler struct {
-	ContractRepo database.ContractRepo
+	ContractRepo ContractGetter
 }
 
 func NewContractHandler() ContractHandler {
@@ -24,7 +32,7 @@ func (handler ContractHandler) HandleGetContracts(context *gin.Context) {
 	partitionId := context.Param("pid")
 	contracts, err := handler.ContractRepo.GetContracts(partitionId)
 	if err != nil {
-		context.IndentedJSON(http.StatusInternalServerError, nil)
+		context.IndentedJSON(http.StatusInternalServerError, models.NewInternalServerError())
 		return
 	}
 
@@ -37,10 +45,10 @@ func (handler ContractHandler) HandleGetContract(context *gin.Context) {
 	contract, err := handler.ContractRepo.GetContract(partitionId, contractId)
 	if err != nil {
 		if strings.Contains(err.Error(), constants.ResourceNotFound) {
-			context.IndentedJSON(http.StatusNotFound, nil)
+			context.IndentedJSON(http.StatusNotFound, models.NewResourceNotFoundError())
 			return
 		}
-		context.IndentedJSON(http.StatusInternalServerError, nil)
+		context.IndentedJSON(http.StatusInternalServerError, models.NewInternalServerError())
 		return
 	}
 

@@ -26,7 +26,7 @@ const (
 type TestCase struct {
 	Name string
 	Type string
-	Mock func()
+	Mock []func()
 }
 
 var testKey = map[string]types.AttributeValue{
@@ -51,29 +51,38 @@ func TestUnit_GetEntity(t *testing.T) {
 		{
 			Name: "Positive Test Contract",
 			Type: CONTRACT,
-			Mock: func() {
-				mockDBManager.EXPECT().GetItem(gomock.Any(), gomock.Any()).Return(data.TestGetItemOutputContract, nil)
+			Mock: []func(){
+				func() {
+					mockDBManager.EXPECT().GetItem(gomock.Any(), gomock.Any()).Return(data.TestGetItemOutputContract, nil)
+				},
 			},
 		},
 		{
 			Name: "Positive Test Tariff",
 			Type: TARIFF,
-			Mock: func() {
-				mockDBManager.EXPECT().GetItem(gomock.Any(), gomock.Any()).Return(data.TestGetItemOutputTariff, nil)
+			Mock: []func(){
+				func() {
+					mockDBManager.EXPECT().GetItem(gomock.Any(), gomock.Any()).Return(data.TestGetItemOutputTariff, nil)
+				},
 			},
 		},
 		{
 			Name: "Positive Test Provider",
 			Type: PROVIDER,
-			Mock: func() {
-				mockDBManager.EXPECT().GetItem(gomock.Any(), gomock.Any()).Return(data.TestGetItemOutputProvider, nil)
+			Mock: []func(){
+				func() {
+					mockDBManager.EXPECT().GetItem(gomock.Any(), gomock.Any()).Return(data.TestGetItemOutputProvider, nil)
+				},
 			},
 		},
 	}
 
 	for _, tc := range testcases {
 		t.Run(tc.Name, func(t *testing.T) {
-			tc.Mock()
+			for idx := range tc.Mock {
+				tc.Mock[idx]()
+			}
+
 			switch tc.Type {
 			case CONTRACT:
 				//act
@@ -270,22 +279,28 @@ func TestUnit_DeleteEntity(t *testing.T) {
 		{
 			Name: "Positive Test",
 			Type: POSITIVE,
-			Mock: func() {
-				mockDBManager.EXPECT().DeleteItem(gomock.Any(), gomock.Any()).Return(&dynamodb.DeleteItemOutput{}, nil)
+			Mock: []func(){
+				func() {
+					mockDBManager.EXPECT().DeleteItem(gomock.Any(), gomock.Any()).Return(&dynamodb.DeleteItemOutput{}, nil)
+				},
 			},
 		},
 		{
 			Name: "Negative Test",
 			Type: NEGATIVE,
-			Mock: func() {
-				mockDBManager.EXPECT().DeleteItem(gomock.Any(), gomock.Any()).Return(&dynamodb.DeleteItemOutput{}, errors.New(constants.ResourceNotFound))
+			Mock: []func(){
+				func() {
+					mockDBManager.EXPECT().DeleteItem(gomock.Any(), gomock.Any()).Return(&dynamodb.DeleteItemOutput{}, errors.New(constants.ResourceNotFound))
+				},
 			},
 		},
 	}
 
 	for _, tc := range testcases {
 		t.Run(tc.Name, func(t *testing.T) {
-			tc.Mock()
+			for idx := range tc.Mock {
+				tc.Mock[idx]()
+			}
 			//act
 			switch tc.Type {
 			case POSITIVE:
@@ -322,22 +337,28 @@ func TestUnit_UpdateEntity(t *testing.T) {
 		{
 			Name: "Positive Test",
 			Type: POSITIVE,
-			Mock: func() {
-				mockDBManager.EXPECT().UpdateItem(gomock.Any(), gomock.Any()).Return(&dynamodb.UpdateItemOutput{}, nil)
+			Mock: []func(){
+				func() {
+					mockDBManager.EXPECT().UpdateItem(gomock.Any(), gomock.Any()).Return(&dynamodb.UpdateItemOutput{}, nil)
+				},
 			},
 		},
 		{
 			Name: "Negative Test Resource Not Found",
 			Type: NEGATIVE,
-			Mock: func() {
-				mockDBManager.EXPECT().UpdateItem(gomock.Any(), gomock.Any()).Return(&dynamodb.UpdateItemOutput{}, errors.New(constants.ResourceNotFound))
+			Mock: []func(){
+				func() {
+					mockDBManager.EXPECT().UpdateItem(gomock.Any(), gomock.Any()).Return(&dynamodb.UpdateItemOutput{}, errors.New(constants.ResourceNotFound))
+				},
 			},
 		},
 	}
 
 	for _, tc := range testcases {
 		t.Run(tc.Name, func(t *testing.T) {
-			tc.Mock()
+			for idx := range tc.Mock {
+				tc.Mock[idx]()
+			}
 			switch tc.Type {
 			case POSITIVE:
 				err := UpdateEntity(testDBClient, testKey, expr)
@@ -355,6 +376,7 @@ func TestUnit_UpdateEntity(t *testing.T) {
 	}
 }
 
+// todo fix failing tests
 func Test_QueryEntities(t *testing.T) {
 	//arrange
 	mockController := gomock.NewController(t)
@@ -372,29 +394,47 @@ func Test_QueryEntities(t *testing.T) {
 		{
 			Name: "Positive Test Contract",
 			Type: CONTRACT,
-			Mock: func() {
-				mockDBManager.EXPECT().Query(gomock.Any(), gomock.Any()).Return(data.TestContractQueryOutput, nil)
+			Mock: []func(){
+				func() {
+					mockDBManager.EXPECT().Query(gomock.Any(), gomock.Any()).Return(data.TestContractQueryOutput, nil)
+				},
+			},
+		},
+		{
+			Name: "Positive Test Contract With Pagination",
+			Type: CONTRACT,
+			Mock: []func(){
+				func() {
+					mockDBManager.EXPECT().Query(gomock.Any(), gomock.Any()).Return(data.TestContractQueryOutputPagination, nil)
+					mockDBManager.EXPECT().Query(gomock.Any(), gomock.Any()).Return(data.TestContractQueryOutput, nil)
+				},
 			},
 		},
 		{
 			Name: "Positive Test Tariff",
 			Type: TARIFF,
-			Mock: func() {
-				mockDBManager.EXPECT().Query(gomock.Any(), gomock.Any()).Return(data.TestTariffQueryOutput, nil)
+			Mock: []func(){
+				func() {
+					mockDBManager.EXPECT().Query(gomock.Any(), gomock.Any()).Return(data.TestTariffQueryOutput, nil)
+				},
 			},
 		},
 		{
 			Name: "Positive Test Provider",
 			Type: PROVIDER,
-			Mock: func() {
-				mockDBManager.EXPECT().Query(gomock.Any(), gomock.Any()).Return(data.TestProviderQueryOutput, nil)
+			Mock: []func(){
+				func() {
+					mockDBManager.EXPECT().Query(gomock.Any(), gomock.Any()).Return(data.TestProviderQueryOutput, nil)
+				},
 			},
 		},
 	}
 
 	for _, tc := range testcases {
 		t.Run(tc.Name, func(t *testing.T) {
-			tc.Mock()
+			for idx := range tc.Mock {
+				tc.Mock[idx]()
+			}
 			switch tc.Type {
 			case CONTRACT:
 				contracts, err := QueryEntities[models.Contract](testDBClient, data.TestPartitionId, data.TestSortKey)
@@ -436,29 +476,37 @@ func Test_QueryEntities_Negative(t *testing.T) {
 		{
 			Name: "Negative Test Contract",
 			Type: CONTRACT,
-			Mock: func() {
-				mockDBManager.EXPECT().Query(gomock.Any(), gomock.Any()).Return(&dynamodb.QueryOutput{}, errors.New("DatabaseError"))
+			Mock: []func(){
+				func() {
+					mockDBManager.EXPECT().Query(gomock.Any(), gomock.Any()).Return(&dynamodb.QueryOutput{}, errors.New("DatabaseError"))
+				},
 			},
 		},
 		{
 			Name: "Negative Test Tariff",
 			Type: TARIFF,
-			Mock: func() {
-				mockDBManager.EXPECT().Query(gomock.Any(), gomock.Any()).Return(&dynamodb.QueryOutput{}, errors.New("DatabaseError"))
+			Mock: []func(){
+				func() {
+					mockDBManager.EXPECT().Query(gomock.Any(), gomock.Any()).Return(&dynamodb.QueryOutput{}, errors.New("DatabaseError"))
+				},
 			},
 		},
 		{
 			Name: "Negative Test Provider",
 			Type: PROVIDER,
-			Mock: func() {
-				mockDBManager.EXPECT().Query(gomock.Any(), gomock.Any()).Return(&dynamodb.QueryOutput{}, errors.New("DatabaseError"))
+			Mock: []func(){
+				func() {
+					mockDBManager.EXPECT().Query(gomock.Any(), gomock.Any()).Return(&dynamodb.QueryOutput{}, errors.New("DatabaseError"))
+				},
 			},
 		},
 	}
 
 	for _, tc := range testcases {
 		t.Run(tc.Name, func(t *testing.T) {
-			tc.Mock()
+			for idx := range tc.Mock {
+				tc.Mock[idx]()
+			}
 			switch tc.Type {
 			case CONTRACT:
 				contracts, err := QueryEntities[models.Contract](testDBClient, data.TestPartitionId, data.TestSortKey)

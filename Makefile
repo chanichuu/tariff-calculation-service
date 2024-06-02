@@ -22,3 +22,6 @@ deploy: package precondition-aws
 
 remove: precondition-aws
 	serverless remove
+
+test:
+	go test ./...

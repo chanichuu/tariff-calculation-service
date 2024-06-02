@@ -130,9 +130,8 @@ func QueryEntities[T any](dbClient DBClient, partitionKey, sortKey string) ([]DB
 	return dbEntity, nil
 }
 
-func query[T any](dbClient DBClient, expr expression.Expression) ([]T, error) {
+func query[T any](dbClient DBClient, expr expression.Expression) (queryResponse []T, err error) {
 	var response *dynamodb.QueryOutput
-	queryResponse := []T{}
 	for response == nil || response.LastEvaluatedKey != nil {
 		lastEvaluatedKey := map[string]types.AttributeValue{}
 		if response == nil {
@@ -140,7 +139,7 @@ func query[T any](dbClient DBClient, expr expression.Expression) ([]T, error) {
 		} else {
 			lastEvaluatedKey = response.LastEvaluatedKey
 		}
-		response, err := dbClient.DynamoDBClient.Query(context.TODO(), &dynamodb.QueryInput{
+		response, err = dbClient.DynamoDBClient.Query(context.TODO(), &dynamodb.QueryInput{
 			TableName:                 &dbClient.TableName,
 			ExpressionAttributeNames:  expr.Names(),
 			ExpressionAttributeValues: expr.Values(),
@@ -150,7 +149,7 @@ func query[T any](dbClient DBClient, expr expression.Expression) ([]T, error) {
 		if err != nil {
 			return nil, err
 		}
-		queryResponsePage := []T{}
+		var queryResponsePage []T
 
 		err = attributevalue.UnmarshalListOfMaps(response.Items, &queryResponsePage)
 		if err != nil {

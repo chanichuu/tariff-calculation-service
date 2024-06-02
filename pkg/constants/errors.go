@@ -1,5 +1,6 @@
 package constants
 
 const (
-	ResourceNotFound = "ResourceNotFound"
+	ResourceNotFound    = "ResourceNotFound"
+	InternalServerError = "InternalServerError"
 )
