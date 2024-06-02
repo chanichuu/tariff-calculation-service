@@ -2,9 +2,8 @@ package httphandler
 
 import (
 	"net/http"
-	"strings"
 	"tariff-calculation-service/internal/database"
-	"tariff-calculation-service/pkg/constants"
+	"tariff-calculation-service/pkg"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,12 +33,7 @@ func (handler TariffHandler) HandleGetTariff(context *gin.Context) {
 	tariffId := context.Param("tid")
 	tariff, err := handler.TariffRepo.GetTariff(partitionId, tariffId)
 	if err != nil {
-		if strings.Contains(err.Error(), constants.ResourceNotFound) {
-			context.IndentedJSON(http.StatusNotFound, nil)
-			return
-		}
-		context.IndentedJSON(http.StatusInternalServerError, nil)
-		return
+		pkg.HandleResourceNotFoundAndInternalServerError(context, err)
 	}
 
 	context.IndentedJSON(http.StatusOK, tariff)

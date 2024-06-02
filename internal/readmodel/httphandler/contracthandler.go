@@ -4,11 +4,10 @@ package httphandler
 
 import (
 	"net/http"
-	"strings"
 
 	"tariff-calculation-service/internal/database"
 	"tariff-calculation-service/internal/models"
-	"tariff-calculation-service/pkg/constants"
+	"tariff-calculation-service/pkg"
 
 	"github.com/gin-gonic/gin"
 )
@@ -44,11 +43,7 @@ func (handler ContractHandler) HandleGetContract(context *gin.Context) {
 	contractId := context.Param("cid")
 	contract, err := handler.ContractRepo.GetContract(partitionId, contractId)
 	if err != nil {
-		if strings.Contains(err.Error(), constants.ResourceNotFound) {
-			context.IndentedJSON(http.StatusNotFound, models.NewResourceNotFoundError())
-			return
-		}
-		context.IndentedJSON(http.StatusInternalServerError, models.NewInternalServerError())
+		pkg.HandleResourceNotFoundAndInternalServerError(context, err)
 		return
 	}
 
