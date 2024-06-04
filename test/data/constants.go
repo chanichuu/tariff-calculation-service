@@ -1,5 +1,7 @@
 package data
 
+import "tariff-calculation-service/pkg/enums"
+
 const (
 	TestPartitionId = "8eb474f4-3bf9-483c-8c4d-6193a7217fa3"
 	TestContractId  = "8b026b56-db5e-4b2a-8d7d-a8b69660977f"
@@ -11,4 +13,10 @@ const (
 	TestContractDescription = "Test Description"
 	TestContractStartDate   = "2020-03-24T12:04:18Z"
 	TestContractEndDate     = "2022-03-24T12:04:18Z"
+
+	TestTariffName = "Test Tariff"
+	TestCurrency   = "GBP"
+	TestValidFrom  = "2020-03-24T12:04:18Z"
+	TestValidTo    = "2022-03-24T12:04:18Z"
+	TestTariffType = enums.Biogas
 )

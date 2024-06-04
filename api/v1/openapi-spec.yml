@@ -1,0 +1,719 @@
+openapi: 3.0.0
+info:
+  title: Tariff Calculation Service API
+  description: |
+    Tariff Calculation Service REST API providing CRUD operations for Contracts, Providers & Tariffs.
+  contact:
+    name: Chantal Marie Huttenloher
+    url: c.m.huttenloher@gmail.com
+  version: "1.0.0"
+
+servers:
+  # update the urls once vertical ID is modified
+  - url: tbd
+    description: Tariff Calculation-DEV Environment
+  - url: tbd
+    description: Tariff Calculation-INT Environment
+  - url: tbd
+    description: Tariff Calculation-PROD Environment
+
+paths:
+  # Contracts
+  /partitions/{pid}/contracts:
+    parameters:
+      - name: pid
+        in: path
+        description: Partition Id
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Returns a list of contracts
+      tags:
+        - Contract
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractList"
+          description: List of contracts
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Internal server error
+    post:
+      summary: Returns the created contract
+      description: |
+        Required attributes: name, startDate
+      tags:
+        - Contract
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractPost"
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+          description: Created contract base information
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Internal server error
+  /partitions/{pid}/contracts/{cid}:
+    parameters:
+      - name: pid
+        in: path
+        description: Partition Id
+        required: true
+        schema:
+          type: string
+      - name: cid
+        in: path
+        description: Contract Id
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Returns a contract
+      tags:
+        - Contract
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+          description: Contract base information
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Internal server error
+    patch:
+      summary: Returns the patched contract
+      description: |
+        Required attributes: name, startDate
+      tags:
+        - Contract
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Contract"
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Internal server error
+    delete:
+      summary: Returns no content
+      tags:
+        - Contract
+      responses:
+        "204":
+          description: No content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Internal server error
+  # Providers
+  /partitions/{pid}/providers:
+    parameters:
+      - name: pid
+        in: path
+        description: Partition Id
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Returns a list of providers
+      tags:
+        - Provider
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProviderList"
+          description: List of providers
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Internal server error
+    post:
+      summary: Returns the created provider
+      description: |
+        Required attributes: name
+      tags:
+        - Provider
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProviderPost"
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Provider"
+          description: Created provider base information
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Internal server error
+  /partitions/{pid}/providers/{id}:
+    parameters:
+      - name: pid
+        in: path
+        description: Partition Id
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: Provider Id
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Returns a provider
+      tags:
+        - Provider
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Provider"
+          description: Provider base information
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Internal server error
+    patch:
+      summary: Updates the provider
+      description: |
+        Required attributes: name
+      tags:
+        - Provider
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Provider"
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Internal server error
+    delete:
+      summary: Returns no content
+      tags:
+        - Provider
+      responses:
+        "204":
+          description: No content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Internal server error
+  /partitions/{pid}/tariffs:
+    parameters:
+      - name: pid
+        in: path
+        description: Partition Id
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Returns a list of tariffs
+      tags:
+        - Tariff
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TariffList"
+          description: Tariff List
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Internal server error
+    post:
+      summary: Returns the created tariff
+      description: |
+        Required attributes: name, currency, validFrom, validTo, tariffType
+
+        Currency values use the ISO 4217 alpha-3 standard https://en.wikipedia.org/wiki/ISO_4217
+      tags:
+        - Tariff
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TariffPost"
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tariff"
+          description: Created tariff information
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Internal server error
+  /partitions/{pid}/tariffs/{id}:
+    parameters:
+      - name: pid
+        in: path
+        description: Partition Id
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: Tariff Id
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Returns a tariff
+      tags:
+        - Tariff
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tariff"
+          description: Tariff
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Internal server error
+    patch:
+      summary: Returns the updated tariff
+      description: |
+        Required attributes: name, currency, validFrom, validTo, tariffType
+
+        Currency values use the ISO 4217 alpha-3 standard https://en.wikipedia.org/wiki/ISO_4217
+      tags:
+        - Tariff
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Tariff"
+      responses:
+        "204":
+          description: No content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Internal server error
+    delete:
+      summary: Returns no content
+      tags:
+        - Tariff
+      responses:
+        "204":
+          description: No content
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericErrorResponse"
+          description: Internal server error
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Contract:
+      type: object
+      required:
+        - name
+        - startDate
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+        description:
+          type: string
+        provider:
+          type: string
+        tariffs:
+          type: array
+          items:
+            type: string
+    ContractPost:
+      type: object
+      required:
+        - name
+        - startDate
+      properties:
+        name:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+        description:
+          type: string
+        provider:
+          type: string
+        tariffs:
+          type: array
+          items:
+            type: string
+    ContractList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Contract"
+    Provider:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        address:
+          $ref: "#/components/schemas/Address"
+    Address:
+      type: object
+      properties:
+        street:
+          type: string
+        postalCode:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+    ProviderPost:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        address:
+          $ref: "#/components/schemas/Address"
+    ProviderList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Provider"
+    Tariff:
+      type: object
+      required:
+        - name
+        - currency
+        - validFrom
+        - validTo
+        - tariffType
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        currency:
+          type: string
+        validFrom:
+          type: string
+        validTo:
+          type: string
+        tariffType:
+          type: string
+        fixedTariff:
+          $ref: "#/components/schemas/FixedTariff"
+        dynamicTariff:
+          $ref: "#/components/schemas/DynamicTariff"
+    FixedTariff:
+      type: object
+      properties:
+        pricePerUnit:
+          type: number
+    DynamicTariff:
+      type: object
+      properties:
+        hourlyTariffs:
+          type: array
+          items:
+            type: object
+            properties:
+              startTime:
+                type: string
+              validDays:
+                type: array
+                items:
+                  type: string
+              pricePerUnit:
+                type: number
+    TariffPost:
+      type: object
+      required:
+        - name
+        - currency
+        - validFrom
+        - validTo
+        - tariffType
+      properties:
+        name:
+          type: string
+        currency:
+          type: string
+        validFrom:
+          type: string
+        validTo:
+          type: string
+        tariffType:
+          type: string
+        fixedTariff:
+          $ref: "#/components/schemas/FixedTariff"
+        dynamicTariff:
+          $ref: "#/components/schemas/DynamicTariff"
+    TariffList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Tariff"
+    GenericErrorResponse:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        detail:
+          type: string
+        status:
+          type: integer
+
+security:
+  - BearerAuth: []

@@ -32,16 +32,46 @@ var TestGetItemOutputContract = &dynamodb.GetItemOutput{
 	Item: TestAttributeValuesContract,
 }
 
+var TestAttributeValuesContractWithoutTariffs = map[string]types.AttributeValue{
+	"Partition_Id": &types.AttributeValueMemberS{Value: TestPartitionId},
+	"Sort_Key":     &types.AttributeValueMemberS{Value: TestSortKey},
+	"Data": &types.AttributeValueMemberM{Value: map[string]types.AttributeValue{
+		"Id":          &types.AttributeValueMemberS{Value: TestContractId},
+		"Name":        &types.AttributeValueMemberS{Value: TestContractName},
+		"Description": &types.AttributeValueMemberS{Value: TestContractDescription},
+		"StartDate":   &types.AttributeValueMemberS{Value: TestContractStartDate},
+		"EndDate":     &types.AttributeValueMemberS{Value: TestContractEndDate},
+		"Provider":    &types.AttributeValueMemberS{Value: TestProviderId},
+		"Tariffs":     &types.AttributeValueMemberL{Value: []types.AttributeValue{}},
+	}},
+}
+
 var TestAttributeValuesTariff = map[string]types.AttributeValue{
 	"Partition_Id": &types.AttributeValueMemberS{Value: TestPartitionId},
 	"Sort_Key":     &types.AttributeValueMemberS{Value: TestSortKey},
 	"Data": &types.AttributeValueMemberM{Value: map[string]types.AttributeValue{
 		"Id":         &types.AttributeValueMemberS{Value: TestTariffId},
-		"Name":       &types.AttributeValueMemberS{Value: "TestTariff"},
-		"Currency":   &types.AttributeValueMemberS{Value: "€"},
-		"ValidFrom":  &types.AttributeValueMemberS{Value: "2020-03-24T12:04:18Z"},
-		"ValidTo":    &types.AttributeValueMemberS{Value: "2022-03-24T12:04:18Z"},
-		"TariffType": &types.AttributeValueMemberN{Value: "1"},
+		"Name":       &types.AttributeValueMemberS{Value: TestTariffName},
+		"Currency":   &types.AttributeValueMemberS{Value: TestCurrency},
+		"ValidFrom":  &types.AttributeValueMemberS{Value: TestValidFrom},
+		"ValidTo":    &types.AttributeValueMemberS{Value: TestValidTo},
+		"TariffType": &types.AttributeValueMemberN{Value: "3"},
+		"FixedTariff": &types.AttributeValueMemberM{Value: map[string]types.AttributeValue{
+			"PricePerUnit": &types.AttributeValueMemberN{Value: "64.5"},
+		}},
+		"DynamicTariff": &types.AttributeValueMemberM{Value: map[string]types.AttributeValue{
+			"HourlyTariffs": &types.AttributeValueMemberL{Value: []types.AttributeValue{
+				&types.AttributeValueMemberM{Value: map[string]types.AttributeValue{
+					"StartTime": &types.AttributeValueMemberN{Value: TestValidFrom},
+					"ValidDays": &types.AttributeValueMemberL{Value: []types.AttributeValue{
+						&types.AttributeValueMemberN{Value: "0"},
+						&types.AttributeValueMemberN{Value: "1"},
+						&types.AttributeValueMemberN{Value: "2"},
+					}},
+					"PricePerUnit": &types.AttributeValueMemberN{Value: "54.2"},
+				}},
+			}},
+		}},
 	}},
 }
 
@@ -49,12 +79,22 @@ var TestGetItemOutputTariff = &dynamodb.GetItemOutput{
 	Item: TestAttributeValuesTariff,
 }
 
+var TestGetQueryOutputTariff = &dynamodb.QueryOutput{
+	Items: []map[string]types.AttributeValue{
+		TestAttributeValuesTariff,
+	},
+}
+
+var TestGetItemOutputContractWithoutTariffs = &dynamodb.GetItemOutput{
+	Item: TestAttributeValuesContractWithoutTariffs,
+}
+
 var TestAttributeValuesProvider = map[string]types.AttributeValue{
 	"Partition_Id": &types.AttributeValueMemberS{Value: TestPartitionId},
 	"Sort_Key":     &types.AttributeValueMemberS{Value: TestSortKey},
 	"Data": &types.AttributeValueMemberM{Value: map[string]types.AttributeValue{
-		"Id":    &types.AttributeValueMemberS{Value: TestTariffId},
-		"Name":  &types.AttributeValueMemberS{Value: "TestTariff"},
+		"Id":    &types.AttributeValueMemberS{Value: TestProviderId},
+		"Name":  &types.AttributeValueMemberS{Value: "TestProvider"},
 		"Email": &types.AttributeValueMemberS{Value: "test@provider.com"},
 		"Address": &types.AttributeValueMemberM{Value: map[string]types.AttributeValue{
 			"Street":     &types.AttributeValueMemberS{Value: "TestStreet"},
@@ -72,6 +112,12 @@ var TestGetItemOutputProvider = &dynamodb.GetItemOutput{
 var TestContractQueryOutput = &dynamodb.QueryOutput{
 	Items: []map[string]types.AttributeValue{
 		TestAttributeValuesContract,
+	},
+}
+
+var TestContractQueryOutputWithoutTariffs = &dynamodb.QueryOutput{
+	Items: []map[string]types.AttributeValue{
+		TestAttributeValuesContractWithoutTariffs,
 	},
 }
 

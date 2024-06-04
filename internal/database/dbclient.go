@@ -5,6 +5,7 @@ package database
 import (
 	"context"
 	"os"
+	"tariff-calculation-service/pkg/constants"
 
 	"errors"
 
@@ -59,7 +60,7 @@ func GetEntity[T any](dbClient DBClient, key map[string]types.AttributeValue) (*
 	}
 
 	if result.Item == nil || len(result.Item) == 0 {
-		return nil, errors.New("ResourceNotFoundError") // todo create proper error
+		return nil, errors.New(constants.ResourceNotFound) // todo create proper error
 	}
 
 	dbEntity := DBEntity[T]{}
