@@ -2,8 +2,10 @@ package database
 
 import (
 	"errors"
+	"fmt"
 	"tariff-calculation-service/internal/models"
 
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
@@ -47,12 +49,31 @@ func (pr ProviderRepo) GetProvider(partitionId, providerId string) (*models.Prov
 }
 
 func (pr ProviderRepo) CreateProvider(partitionId string, provider models.Provider) (*models.Provider, error) {
+	providerDB := DBEntity[models.Provider]{
+		PartitionKey: partitionId,
+		SortKey:      ProviderSortKeyPrefix + provider.Id,
+		Data:         provider,
+	}
+	err := PutEntity[DBEntity[models.Provider]](pr.DBClient, providerDB)
+	if err != nil {
+		return &models.Provider{}, err
+	}
 	return &provider, nil
 }
 
 func (pr ProviderRepo) UpdateProvider(partitionId string, provider models.Provider) error {
-	return nil
+	dbUpdate := expression.Set(expression.Name("Data"), expression.Value(pr))
+	expr, err := expression.NewBuilder().WithUpdate(dbUpdate).Build()
+	if err != nil {
+		return fmt.Errorf("error building expression %v", err)
+	}
+	err = UpdateEntity(pr.DBClient, pr.GetKey(partitionId, provider.Id), expr)
+
+	return err
 }
+
 func (pr ProviderRepo) DeleteProvider(partitionId, providerId string) error {
-	return nil
+	err := DeleteEntity(pr.DBClient, pr.GetKey(partitionId, providerId))
+
+	return err
 }

@@ -2,8 +2,10 @@ package database
 
 import (
 	"errors"
+	"fmt"
 	"tariff-calculation-service/internal/models"
 
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
@@ -47,12 +49,32 @@ func (cr ContractRepo) GetContract(partitionId, contractId string) (*models.Cont
 }
 
 func (cr ContractRepo) CreateContract(partitionId string, contract models.Contract) (*models.Contract, error) {
+	contractDB := DBEntity[models.Contract]{
+		PartitionKey: partitionId,
+		SortKey:      ContractSortKeyPrefix + contract.Id,
+		Data:         contract,
+	}
+	err := PutEntity[DBEntity[models.Contract]](cr.DBClient, contractDB)
+	if err != nil {
+		return &models.Contract{}, err
+	}
+
 	return &contract, nil
 }
 
 func (cr ContractRepo) UpdateContract(partitionId string, contract models.Contract) error {
-	return nil
+	dbUpdate := expression.Set(expression.Name("Data"), expression.Value(contract))
+	expr, err := expression.NewBuilder().WithUpdate(dbUpdate).Build()
+	if err != nil {
+		return fmt.Errorf("error building expression %v", err)
+	}
+	err = UpdateEntity(cr.DBClient, cr.GetKey(partitionId, contract.Id), expr)
+
+	return err
 }
+
 func (cr ContractRepo) DeleteContract(partitionId, contractId string) error {
-	return nil
+	err := DeleteEntity(cr.DBClient, cr.GetKey(partitionId, contractId))
+
+	return err
 }

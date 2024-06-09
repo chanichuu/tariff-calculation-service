@@ -24,7 +24,7 @@ type DynamicTariff struct {
 }
 
 type HourlyTariff struct {
-	StartTime    string           `json:"startTime"`
-	ValidDays    []enums.WeekDays `json:"validDays"`
-	PricePerUnit float64          `json:"pricePerUnit"`
+	StartTime    string  `json:"startTime"`
+	ValidDays    []uint8 `json:"validDays"`
+	PricePerUnit float64 `json:"pricePerUnit"`
 }

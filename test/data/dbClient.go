@@ -32,6 +32,14 @@ var TestGetItemOutputContract = &dynamodb.GetItemOutput{
 	Item: TestAttributeValuesContract,
 }
 
+var TestPutItemOutputContract = &dynamodb.PutItemOutput{
+	Attributes: TestAttributeValuesContract,
+}
+
+var TestUpdateItemOutputContract = &dynamodb.UpdateItemOutput{
+	Attributes: TestAttributeValuesContract,
+}
+
 var TestAttributeValuesContractWithoutTariffs = map[string]types.AttributeValue{
 	"Partition_Id": &types.AttributeValueMemberS{Value: TestPartitionId},
 	"Sort_Key":     &types.AttributeValueMemberS{Value: TestSortKey},
@@ -89,6 +97,14 @@ var TestGetItemOutputContractWithoutTariffs = &dynamodb.GetItemOutput{
 	Item: TestAttributeValuesContractWithoutTariffs,
 }
 
+var TestPutItemOutputTariff = &dynamodb.PutItemOutput{
+	Attributes: TestAttributeValuesTariff,
+}
+
+var TestUpdateItemOutputTariff = &dynamodb.UpdateItemOutput{
+	Attributes: TestAttributeValuesTariff,
+}
+
 var TestAttributeValuesProvider = map[string]types.AttributeValue{
 	"Partition_Id": &types.AttributeValueMemberS{Value: TestPartitionId},
 	"Sort_Key":     &types.AttributeValueMemberS{Value: TestSortKey},
@@ -141,4 +157,12 @@ var TestProviderQueryOutput = &dynamodb.QueryOutput{
 	Items: []map[string]types.AttributeValue{
 		TestAttributeValuesProvider,
 	},
+}
+
+var TestPutItemOutputProvider = &dynamodb.PutItemOutput{
+	Attributes: TestAttributeValuesProvider,
+}
+
+var TestUpdateItemOutputProvider = &dynamodb.UpdateItemOutput{
+	Attributes: TestAttributeValuesProvider,
 }

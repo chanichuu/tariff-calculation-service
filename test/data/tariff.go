@@ -2,7 +2,6 @@ package data
 
 import (
 	"tariff-calculation-service/internal/models"
-	"tariff-calculation-service/pkg/enums"
 )
 
 var Tariff = models.Tariff{
@@ -28,6 +27,6 @@ var dynamicTariff = models.DynamicTariff{
 
 var hourlyTariff = models.HourlyTariff{
 	StartTime:    TestValidFrom,
-	ValidDays:    []enums.WeekDays{enums.MO, enums.TU, enums.WE},
+	ValidDays:    []uint8{0, 1, 2},
 	PricePerUnit: 54.2,
 }

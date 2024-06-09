@@ -142,3 +142,173 @@ func Test_GetTariff(t *testing.T) {
 		})
 	}
 }
+
+func Test_CreateTariff(t *testing.T) {
+	mockController := gomock.NewController(t)
+	defer mockController.Finish()
+
+	mockDBManager := dbtesting.NewMockDynamoDBManager(mockController)
+
+	testDBClient := DBClient{
+		DynamoDBClient: mockDBManager,
+		TableName:      "TestTableName",
+		PartitionKey:   "TestPartitionKey",
+		SortKey:        "TestSortKey",
+	}
+
+	tariffRepo := TariffRepo{
+		DBClient: testDBClient,
+	}
+
+	testcases := []testcaseTariffRepo{
+		{
+			Name:        "Positive Test",
+			PartitionId: data.TestPartitionId,
+			TariffId:    data.TestTariffId,
+			Mock: []func(){
+				func() {
+					mockDBManager.EXPECT().PutItem(gomock.Any(), gomock.Any()).Return(data.TestPutItemOutputTariff, nil)
+				},
+			},
+			expectedResponse: &data.Tariff,
+		},
+		{
+			Name:        "Negative Test",
+			PartitionId: data.TestPartitionId,
+			TariffId:    data.TestTariffId,
+			Mock: []func(){
+				func() {
+					mockDBManager.EXPECT().PutItem(gomock.Any(), gomock.Any()).Return(&dynamodb.PutItemOutput{}, errors.New(constants.InternalServerError))
+				},
+			},
+			expectedResponse: &models.Tariff{},
+		},
+	}
+	// act
+	for _, tc := range testcases {
+		for idx := range tc.Mock {
+			tc.Mock[idx]()
+		}
+		t.Run(tc.Name, func(t *testing.T) {
+			actualTariffPtr, err := tariffRepo.CreateTariff(tc.PartitionId, data.Tariff)
+			// assert
+			if err != nil {
+				assert.Contains(t, constants.InternalServerError, err.Error())
+			} else {
+				assert.NotNil(t, actualTariffPtr)
+			}
+			assert.Equal(t, tc.expectedResponse, actualTariffPtr)
+		})
+	}
+}
+
+func Test_UpdateTariff(t *testing.T) {
+	mockController := gomock.NewController(t)
+	defer mockController.Finish()
+
+	mockDBManager := dbtesting.NewMockDynamoDBManager(mockController)
+
+	testDBClient := DBClient{
+		DynamoDBClient: mockDBManager,
+		TableName:      "TestTableName",
+		PartitionKey:   "TestPartitionKey",
+		SortKey:        "TestSortKey",
+	}
+
+	tariffRepo := TariffRepo{
+		DBClient: testDBClient,
+	}
+
+	testcases := []testcaseTariffRepo{
+		{
+			Name:        "Positive Test",
+			PartitionId: data.TestPartitionId,
+			TariffId:    data.TestTariffId,
+			Mock: []func(){
+				func() {
+					mockDBManager.EXPECT().UpdateItem(gomock.Any(), gomock.Any()).Return(data.TestUpdateItemOutputTariff, nil)
+				},
+			},
+			expectedResponse: nil,
+		},
+		{
+			Name:        "Negative Test",
+			PartitionId: data.TestPartitionId,
+			TariffId:    data.TestTariffId,
+			Mock: []func(){
+				func() {
+					mockDBManager.EXPECT().UpdateItem(gomock.Any(), gomock.Any()).Return(&dynamodb.UpdateItemOutput{}, errors.New(constants.ResourceNotFound))
+				},
+			},
+			expectedResponse: errors.New(constants.ResourceNotFound),
+		},
+	}
+	// act
+	for _, tc := range testcases {
+		for idx := range tc.Mock {
+			tc.Mock[idx]()
+		}
+		t.Run(tc.Name, func(t *testing.T) {
+			err := tariffRepo.UpdateTariff(tc.PartitionId, data.Tariff)
+			// assert
+			assert.Equal(t, tc.expectedResponse, err)
+		})
+	}
+}
+
+func Test_DeleteTariff(t *testing.T) {
+	mockController := gomock.NewController(t)
+	defer mockController.Finish()
+
+	mockDBManager := dbtesting.NewMockDynamoDBManager(mockController)
+
+	testDBClient := DBClient{
+		DynamoDBClient: mockDBManager,
+		TableName:      "TestTableName",
+		PartitionKey:   "TestPartitionKey",
+		SortKey:        "TestSortKey",
+	}
+
+	tariffRepo := TariffRepo{
+		DBClient: testDBClient,
+	}
+
+	testcases := []testcaseTariffRepo{
+		{
+			Name:        "Positive Test",
+			PartitionId: data.TestPartitionId,
+			TariffId:    data.TestTariffId,
+			Mock: []func(){
+				func() {
+					mockDBManager.EXPECT().DeleteItem(gomock.Any(), gomock.Any()).Return(&dynamodb.DeleteItemOutput{}, nil)
+				},
+			},
+			expectedResponse: nil,
+		},
+		{
+			Name:        "Negative Test",
+			PartitionId: data.TestPartitionId,
+			TariffId:    data.TestTariffId,
+			Mock: []func(){
+				func() {
+					mockDBManager.EXPECT().DeleteItem(gomock.Any(), gomock.Any()).Return(&dynamodb.DeleteItemOutput{}, errors.New(constants.ResourceNotFound))
+				},
+			},
+			expectedResponse: errors.New(constants.ResourceNotFound),
+		},
+	}
+	// act
+	for _, tc := range testcases {
+		for idx := range tc.Mock {
+			tc.Mock[idx]()
+		}
+		t.Run(tc.Name, func(t *testing.T) {
+			err := tariffRepo.DeleteTariff(tc.PartitionId, tc.TariffId)
+			// assert
+			if err != nil {
+				assert.Contains(t, constants.ResourceNotFound, err.Error())
+			}
+			assert.Equal(t, tc.expectedResponse, err)
+		})
+	}
+}
