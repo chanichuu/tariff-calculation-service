@@ -191,14 +191,14 @@ func Test_CreateProvider(t *testing.T) {
 			tc.Mock[idx]()
 		}
 		t.Run(tc.Name, func(t *testing.T) {
-			actualContract, err := providerRepo.CreateProvider(tc.PartitionId, data.Provider)
+			actualProvider, err := providerRepo.CreateProvider(tc.PartitionId, data.Provider)
 			// assert
 			if err != nil {
 				assert.Contains(t, constants.InternalServerError, err.Error())
 			} else {
-				assert.NotNil(t, actualContract)
+				assert.NotNil(t, actualProvider)
 			}
-			assert.Equal(t, tc.expectedResponse, actualContract)
+			assert.Equal(t, tc.expectedResponse, actualProvider)
 		})
 	}
 }

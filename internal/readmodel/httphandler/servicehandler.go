@@ -7,6 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	ServiceHealth = "Service is healthy."
+)
+
 type HttpHandler struct {
 }
 
@@ -15,7 +19,7 @@ func NewHttpHandler() HttpHandler {
 }
 
 func (httpHandler HttpHandler) HandleGetHealth(context *gin.Context) {
-	context.IndentedJSON(http.StatusOK, "Service is healthy.")
+	context.IndentedJSON(http.StatusOK, ServiceHealth)
 }
 
 func (httpHandler HttpHandler) HandleGetVersion(context *gin.Context) {
