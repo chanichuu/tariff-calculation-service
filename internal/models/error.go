@@ -1,6 +1,13 @@
 package models
 
-import "tariff-calculation-service/pkg/constants"
+import (
+	"errors"
+	"fmt"
+	"strings"
+	"tariff-calculation-service/pkg/constants"
+
+	"github.com/go-playground/validator/v10"
+)
 
 type Error struct {
 	Code   int
@@ -21,5 +28,30 @@ func NewInternalServerError() Error {
 		Code:   500,
 		Name:   constants.InternalServerError,
 		Detail: "Internal Server Error",
+	}
+}
+
+func NewBadRequestFieldValidationError(err error) Error {
+	var validationError validator.ValidationErrors
+	if !errors.As(err, &validationError) {
+		return NewBadRequestError(err)
+	}
+	var validationErrors []string
+	for _, field := range err.(validator.ValidationErrors) {
+		validationErrors = append(validationErrors, field.Field())
+	}
+
+	return Error{
+		Code:   400,
+		Name:   constants.BadRequest,
+		Detail: fmt.Sprintf("%s with invalid value: %s", constants.BadRequest, strings.Join(validationErrors, ", ")),
+	}
+}
+
+func NewBadRequestError(err error) Error {
+	return Error{
+		Code:   400,
+		Name:   constants.BadRequest,
+		Detail: fmt.Sprintf("%s: %s", constants.BadRequest, err.Error()),
 	}
 }

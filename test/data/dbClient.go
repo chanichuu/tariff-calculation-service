@@ -16,14 +16,9 @@ var TestAttributeValuesContract = map[string]types.AttributeValue{
 		"EndDate":     &types.AttributeValueMemberS{Value: TestContractEndDate},
 		"Provider":    &types.AttributeValueMemberS{Value: TestProviderId},
 		"Tariffs": &types.AttributeValueMemberL{Value: []types.AttributeValue{
-			&types.AttributeValueMemberM{Value: map[string]types.AttributeValue{
-				"Id":         &types.AttributeValueMemberS{Value: TestTariffId},
-				"Name":       &types.AttributeValueMemberS{Value: "TestTariff"},
-				"Currency":   &types.AttributeValueMemberS{Value: "€"},
-				"ValidFrom":  &types.AttributeValueMemberS{Value: "2020-03-24T12:04:18Z"},
-				"ValidTo":    &types.AttributeValueMemberS{Value: "2022-03-24T12:04:18Z"},
-				"TariffType": &types.AttributeValueMemberN{Value: "1"},
-			}},
+			&types.AttributeValueMemberS{Value: "7c433cd3-f3b0-463b-82c2-24177dd7bfe8"},
+			&types.AttributeValueMemberS{Value: "8c433cd3-f3b0-463b-82c2-24177dd7bfe8"},
+			&types.AttributeValueMemberS{Value: "9c433cd3-f3b0-463b-82c2-24177dd7bfe8"},
 		}},
 	}},
 }

@@ -8,6 +8,7 @@ const (
 	TestTariffId    = "eb40ecd9-74c9-403c-9e11-33d3f1a26bfe"
 	TestProviderId  = "67aed530-e284-4f1a-9dde-833b8f4968d4"
 	TestSortKey     = "contract#"
+	TestIdInvalid   = "Invalid-8eb474f4"
 
 	TestContractName        = "Test Contract Name"
 	TestContractDescription = "Test Description"

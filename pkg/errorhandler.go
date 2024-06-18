@@ -12,8 +12,8 @@ import (
 
 func HandleResourceNotFoundAndInternalServerError(ctx *gin.Context, err error) {
 	if strings.Contains(err.Error(), constants.ResourceNotFound) {
-		ctx.IndentedJSON(http.StatusNotFound, models.NewResourceNotFoundError())
+		ctx.JSON(http.StatusNotFound, models.NewResourceNotFoundError())
 		return
 	}
-	ctx.IndentedJSON(http.StatusInternalServerError, models.NewInternalServerError())
+	ctx.JSON(http.StatusInternalServerError, models.NewInternalServerError())
 }

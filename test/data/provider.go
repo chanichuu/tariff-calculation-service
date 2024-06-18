@@ -12,10 +12,10 @@ var Provider = models.Provider{
 }
 
 var address = models.Address{
-	Street:     "TestStreet",
-	PostalCode: "107-6001",
-	City:       "Tokyo",
-	Country:    "Japan",
+	Street:      "TestStreet",
+	PostalCode:  "107-6001",
+	City:        "Tokyo",
+	CountryCode: "JPN",
 }
 
 var Providers = []models.Provider{

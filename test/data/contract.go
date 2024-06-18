@@ -11,7 +11,7 @@ var Contract = models.Contract{
 	StartDate:   TestContractStartDate,
 	EndDate:     TestContractEndDate,
 	Provider:    TestProviderId,
-	Tariffs:     []models.Tariff{}, // todo change this to be an array of tariff ids
+	Tariffs:     []string{},
 }
 
 var Contracts = []models.Contract{

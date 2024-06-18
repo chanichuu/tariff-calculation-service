@@ -1,6 +1,7 @@
 package writemodel
 
 import (
+	"tariff-calculation-service/internal/writemodel/writehandlers"
 	"tariff-calculation-service/pkg/constants"
 
 	"github.com/gin-gonic/gin"
@@ -8,19 +9,22 @@ import (
 
 func RouteReadmodelCalls(router *gin.Engine) {
 	subRouter := router.Group(constants.BasePath)
+	contractHandler := writehandlers.NewContractWriteHandler()
+	providerHandler := writehandlers.NewProviderHandler()
+	tariffHandler := writehandlers.NewTariffHandler()
 
 	// Tariff routes
-	subRouter.POST(constants.TariffsPath)
-	subRouter.PUT(constants.SingleTariffPath)
-	subRouter.DELETE(constants.SingleTariffPath)
+	subRouter.POST(constants.TariffsPath, tariffHandler.HandlePostTariff)
+	subRouter.PUT(constants.SingleTariffPath, tariffHandler.HandlePutTariff)
+	subRouter.DELETE(constants.SingleTariffPath, tariffHandler.HandleDeleteTariff)
 
 	// Contract routes
-	subRouter.POST(constants.ContractsPath)
-	subRouter.PUT(constants.SingleContractPath)
-	subRouter.DELETE(constants.SingleContractPath)
+	subRouter.POST(constants.ContractsPath, contractHandler.HandlePostContract)
+	subRouter.PUT(constants.SingleContractPath, contractHandler.HandlePutContract)
+	subRouter.DELETE(constants.SingleContractPath, contractHandler.HandleDeleteContract)
 
 	// Provider routes
-	subRouter.POST(constants.ProvidersPath)
-	subRouter.PUT(constants.SingleProviderPath)
-	subRouter.DELETE(constants.SingleProviderPath)
+	subRouter.POST(constants.ProvidersPath, providerHandler.HandlePostProvider)
+	subRouter.PUT(constants.SingleProviderPath, providerHandler.HandlePutProvider)
+	subRouter.DELETE(constants.SingleProviderPath, providerHandler.HandleDeleteProvider)
 }

@@ -5,8 +5,10 @@ package httphandler
 import (
 	"net/http"
 	"tariff-calculation-service/internal/database"
+	"tariff-calculation-service/internal/interfaces"
 	"tariff-calculation-service/internal/models"
 	"tariff-calculation-service/pkg"
+	"tariff-calculation-service/pkg/validation"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,17 +20,23 @@ type TariffGetter interface {
 
 type TariffHandler struct {
 	TariffRepo TariffGetter
+	Validator  interfaces.Validator
 }
 
 func NewTariffHandler() TariffHandler {
 	return TariffHandler{
 		TariffRepo: database.NewTariffRepo(),
+		Validator:  validation.NewValidator(),
 	}
 }
 
 func (handler TariffHandler) HandleGetTariffs(context *gin.Context) {
-	partitionId := context.Param("pid")
-	tariffs, err := handler.TariffRepo.GetTariffs(partitionId)
+	pathParam := validation.PartitionId{}
+	if err := handler.Validator.ValidateAndSetPathParams(context, pathParam); err != nil {
+		return
+	}
+
+	tariffs, err := handler.TariffRepo.GetTariffs(pathParam.PartitionId)
 	if err != nil {
 		context.IndentedJSON(http.StatusInternalServerError, models.NewInternalServerError())
 		return
@@ -37,9 +45,12 @@ func (handler TariffHandler) HandleGetTariffs(context *gin.Context) {
 }
 
 func (handler TariffHandler) HandleGetTariff(context *gin.Context) {
-	partitionId := context.Param("pid")
-	tariffId := context.Param("tid")
-	tariff, err := handler.TariffRepo.GetTariff(partitionId, tariffId)
+	pathParams := validation.PartitionIdWithId{}
+	if err := handler.Validator.ValidateAndSetPathParams(context, pathParams); err != nil {
+		return
+	}
+
+	tariff, err := handler.TariffRepo.GetTariff(pathParams.PartitionId, pathParams.Id)
 	if err != nil {
 		pkg.HandleResourceNotFoundAndInternalServerError(context, err)
 		return
