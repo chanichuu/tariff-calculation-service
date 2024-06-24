@@ -44,7 +44,7 @@ func NewBadRequestFieldValidationError(err error) Error {
 	return Error{
 		Code:   400,
 		Name:   constants.BadRequest,
-		Detail: fmt.Sprintf("%s with invalid value: %s", constants.BadRequest, strings.Join(validationErrors, ", ")),
+		Detail: fmt.Sprintf("Invalid value: %s", strings.Join(validationErrors, ", ")),
 	}
 }
 
@@ -52,6 +52,6 @@ func NewBadRequestError(err error) Error {
 	return Error{
 		Code:   400,
 		Name:   constants.BadRequest,
-		Detail: fmt.Sprintf("%s: %s", constants.BadRequest, err.Error()),
+		Detail: err.Error(),
 	}
 }

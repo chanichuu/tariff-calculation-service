@@ -37,14 +37,14 @@ func setByType(context *gin.Context, objPtr any) {
 	case *validation.PartitionId:
 		reflect.ValueOf(objPtr).Elem().Set(reflect.ValueOf(
 			validation.PartitionId{
-				PartitionId: context.Param("partitionId"),
+				PartitionId: context.Param("PartitionId"),
 			},
 		))
 	case *validation.PartitionIdWithId:
 		reflect.ValueOf(objPtr).Elem().Set(reflect.ValueOf(
 			validation.PartitionIdWithId{
-				PartitionId: context.Param("partitionId"),
-				Id:          context.Param("id"),
+				PartitionId: context.Param("PartitionId"),
+				Id:          context.Param("Id"),
 			},
 		))
 	}

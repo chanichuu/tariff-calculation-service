@@ -31,7 +31,7 @@ func NewContractWriteHandler() ContractWriteHandler {
 
 func (handler ContractWriteHandler) HandlePostContract(context *gin.Context) {
 	pathParam := validation.PartitionId{}
-	if err := handler.Validator.ValidateAndSetPathParams(context, pathParam); err != nil {
+	if err := handler.Validator.ValidateAndSetPathParams(context, &pathParam); err != nil {
 		return
 	}
 
@@ -54,7 +54,7 @@ func (handler ContractWriteHandler) HandlePostContract(context *gin.Context) {
 
 func (handler ContractWriteHandler) HandlePutContract(context *gin.Context) {
 	pathParam := validation.PartitionIdWithId{}
-	if err := handler.Validator.ValidateAndSetPathParams(context, pathParam); err != nil {
+	if err := handler.Validator.ValidateAndSetPathParams(context, &pathParam); err != nil {
 		return
 	}
 
@@ -78,7 +78,7 @@ func (handler ContractWriteHandler) HandlePutContract(context *gin.Context) {
 
 func (handler ContractWriteHandler) HandleDeleteContract(context *gin.Context) {
 	pathParam := validation.PartitionIdWithId{}
-	if err := handler.Validator.ValidateAndSetPathParams(context, pathParam); err != nil {
+	if err := handler.Validator.ValidateAndSetPathParams(context, &pathParam); err != nil {
 		return
 	}
 

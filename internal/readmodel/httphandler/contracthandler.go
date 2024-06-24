@@ -33,7 +33,7 @@ func NewContractHandler() ContractHandler {
 
 func (handler ContractHandler) HandleGetContracts(context *gin.Context) {
 	pathParam := validation.PartitionId{}
-	if err := handler.Validator.ValidateAndSetPathParams(context, pathParam); err != nil {
+	if err := handler.Validator.ValidateAndSetPathParams(context, &pathParam); err != nil {
 		return
 	}
 
@@ -48,7 +48,7 @@ func (handler ContractHandler) HandleGetContracts(context *gin.Context) {
 
 func (handler ContractHandler) HandleGetContract(context *gin.Context) {
 	pathParams := validation.PartitionIdWithId{}
-	if err := handler.Validator.ValidateAndSetPathParams(context, pathParams); err != nil {
+	if err := handler.Validator.ValidateAndSetPathParams(context, &pathParams); err != nil {
 		return
 	}
 

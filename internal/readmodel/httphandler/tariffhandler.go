@@ -32,7 +32,7 @@ func NewTariffHandler() TariffHandler {
 
 func (handler TariffHandler) HandleGetTariffs(context *gin.Context) {
 	pathParam := validation.PartitionId{}
-	if err := handler.Validator.ValidateAndSetPathParams(context, pathParam); err != nil {
+	if err := handler.Validator.ValidateAndSetPathParams(context, &pathParam); err != nil {
 		return
 	}
 
@@ -46,7 +46,7 @@ func (handler TariffHandler) HandleGetTariffs(context *gin.Context) {
 
 func (handler TariffHandler) HandleGetTariff(context *gin.Context) {
 	pathParams := validation.PartitionIdWithId{}
-	if err := handler.Validator.ValidateAndSetPathParams(context, pathParams); err != nil {
+	if err := handler.Validator.ValidateAndSetPathParams(context, &pathParams); err != nil {
 		return
 	}
 

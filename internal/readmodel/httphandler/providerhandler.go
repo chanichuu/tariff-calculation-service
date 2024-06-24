@@ -33,7 +33,7 @@ func NewProviderHandler() ProviderHandler {
 
 func (handler ProviderHandler) HandleGetProviders(context *gin.Context) {
 	pathParam := validation.PartitionId{}
-	if err := handler.Validator.ValidateAndSetPathParams(context, pathParam); err != nil {
+	if err := handler.Validator.ValidateAndSetPathParams(context, &pathParam); err != nil {
 		return
 	}
 
@@ -48,7 +48,7 @@ func (handler ProviderHandler) HandleGetProviders(context *gin.Context) {
 
 func (handler ProviderHandler) HandleGetProvider(context *gin.Context) {
 	pathParams := validation.PartitionIdWithId{}
-	if err := handler.Validator.ValidateAndSetPathParams(context, pathParams); err != nil {
+	if err := handler.Validator.ValidateAndSetPathParams(context, &pathParams); err != nil {
 		return
 	}
 

@@ -5,7 +5,7 @@ type Contract struct {
 	Name        string   `json:"name" binding:"required,max=64"`
 	Description string   `json:"description" binding:"max=128"`
 	StartDate   string   `json:"startDate" binding:"required,datetime=2006-01-02T15:04:05Z07:00"`
-	EndDate     string   `json:"endDate" binding:"datetime=2006-01-02T15:04:05Z07:00"`
-	Provider    string   `json:"provider"`
+	EndDate     string   `json:"endDate" binding:"required,datetime=2006-01-02T15:04:05Z07:00"`
+	Provider    string   `json:"provider" binding:"uuid"`
 	Tariffs     []string `json:"tariffs" binding:"dive,uuid"`
 }

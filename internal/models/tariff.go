@@ -20,7 +20,7 @@ type FixedTariff struct {
 }
 
 type DynamicTariff struct {
-	HourlyTariffs *[]HourlyTariff `json:"hourlyTariffs"`
+	HourlyTariffs []HourlyTariff `json:"hourlyTariffs" binding:"dive"`
 }
 
 type HourlyTariff struct {
